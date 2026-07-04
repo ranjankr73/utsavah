@@ -1,13 +1,13 @@
-import React, { useState, useContext } from 'react';
-import { AuthContext } from '../context/AuthContext';
-import { useNavigate, Link } from 'react-router-dom';
+import React, { useState, useContext } from "react";
+import { AuthContext } from "../context/AuthContext";
+import { useNavigate, Link } from "react-router-dom";
 
 const Login = () => {
-    const [email, setEmail] = useState('');
-    const [password, setPassword] = useState('');
-    const [otp, setOtp] = useState('');
+    const [email, setEmail] = useState("");
+    const [password, setPassword] = useState("");
+    const [otp, setOtp] = useState("");
     const [showOTP, setShowOTP] = useState(false);
-    const [error, setError] = useState('');
+    const [error, setError] = useState("");
     const [loading, setLoading] = useState(false);
 
     const { login, verifyOTP } = useContext(AuthContext);
@@ -16,21 +16,23 @@ const Login = () => {
     const handleSubmit = async (e) => {
         e.preventDefault();
         setLoading(true);
-        setError('');
+        setError("");
         try {
             if (!showOTP) {
                 const data = await login(email, password);
-                if (data.role === 'admin') navigate('/admin');
-                else navigate('/dashboard');
+                if (data.role === "admin") navigate("/admin");
+                else navigate("/dashboard");
             } else {
                 const data = await verifyOTP(email, otp);
-                if (data.role === 'admin') navigate('/admin');
-                else navigate('/dashboard');
+                if (data.role === "admin") navigate("/admin");
+                else navigate("/dashboard");
             }
         } catch (err) {
             if (err.needsVerification) {
                 setShowOTP(true);
-                setError('Account not verified. A new OTP has been sent to your email.');
+                setError(
+                    "Account not verified. A new OTP has been sent to your email.",
+                );
             } else {
                 setError(err.message || err);
             }
@@ -42,17 +44,25 @@ const Login = () => {
     return (
         <div className="max-w-md mx-auto mt-20 bg-white p-8 rounded-xl shadow-lg border border-gray-100">
             <div className="text-center mb-8">
-                <h2 className="text-3xl font-extrabold text-gray-900 mb-2">Welcome Back</h2>
-                <p className="text-gray-500">Sign in to your Eventora account</p>
+                <h2 className="text-3xl font-extrabold text-gray-900 mb-2">
+                    Welcome Back
+                </h2>
+                <p className="text-gray-500">Sign in to your Utsavah account</p>
             </div>
 
-            {error && <div className="bg-red-50 text-red-600 p-3 rounded-lg mb-6 text-center shadow-inner border border-red-100">{error}</div>}
+            {error && (
+                <div className="bg-red-50 text-red-600 p-3 rounded-lg mb-6 text-center shadow-inner border border-red-100">
+                    {error}
+                </div>
+            )}
 
             <form onSubmit={handleSubmit} className="space-y-6">
                 {!showOTP ? (
                     <>
                         <div>
-                            <label className="block text-sm font-semibold text-gray-700 mb-2">Email Address</label>
+                            <label className="block text-sm font-semibold text-gray-700 mb-2">
+                                Email Address
+                            </label>
                             <input
                                 type="email"
                                 required
@@ -62,7 +72,9 @@ const Login = () => {
                             />
                         </div>
                         <div>
-                            <label className="block text-sm font-semibold text-gray-700 mb-2">Password</label>
+                            <label className="block text-sm font-semibold text-gray-700 mb-2">
+                                Password
+                            </label>
                             <input
                                 type="password"
                                 required
@@ -74,7 +86,9 @@ const Login = () => {
                     </>
                 ) : (
                     <div>
-                        <label className="block text-sm font-semibold text-gray-700 mb-2">Verification Code (OTP)</label>
+                        <label className="block text-sm font-semibold text-gray-700 mb-2">
+                            Verification Code (OTP)
+                        </label>
                         <input
                             type="text"
                             required
@@ -89,14 +103,24 @@ const Login = () => {
                 <button
                     type="submit"
                     disabled={loading}
-                    className="w-full bg-gray-900 text-white font-bold py-3 rounded-lg hover:bg-black focus:ring-4 focus:ring-gray-200 transition shadow-md"
+                    className="w-full brand-button font-bold py-3 rounded-xl focus:ring-4 focus:ring-[#fcbf49]/40 transition"
                 >
-                    {loading ? 'Processing...' : (showOTP ? 'Verify OTP & Log In' : 'Sign In')}
+                    {loading
+                        ? "Processing..."
+                        : showOTP
+                          ? "Verify OTP & Log In"
+                          : "Sign In"}
                 </button>
             </form>
 
             <p className="text-center mt-8 text-gray-600">
-                Don't have an account? <Link to="/register" className="text-gray-900 font-bold hover:underline">Sign up</Link>
+                Don't have an account?{" "}
+                <Link
+                    to="/register"
+                    className="text-gray-900 font-bold hover:underline"
+                >
+                    Sign up
+                </Link>
             </p>
         </div>
     );
